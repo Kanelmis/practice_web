@@ -3,12 +3,13 @@
 <p>
     <a href="{% url 'learning_logs:index' %}">Learning Log</a>
     <a href="{% url 'learning_logs:topics' %}">Topics</a>
-   <!-- {% if user.is_authenticated %}
+    {% if user.is_authenticated %}
         Hello, {{user.username}}.
+        <a href = "{% url 'user:logout'%}">Log out</a>
     {% else %}
-         <a href = "{% url 'users:login' %">login</a> 
+        <a href = "{% url 'user:login' %}">login</a>
     {% endif %}
--->
+
 </p>
 
 {% block content %}{% endblock content %}
