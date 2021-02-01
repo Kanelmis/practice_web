@@ -5,6 +5,7 @@ from django.urls import reverse
 
 from .models import Topic
 from .forms import TopicForm,EntryForm
+from .models import Entry
 # Create your views here.
 def index(request):
     """index.html"""
@@ -40,12 +41,32 @@ def new_entry(request, topic_id):
     topic = Topic.objects.get(id=topic_id)
 
     if request.method !='POST':
+        form = EntryForm()
+    else:
         form = EntryForm(data=request.POST)
         if form.is_valid():
-            new_entry = form.save(commit=False)
-            new_entry.topic = topic
-            new_entry.save()
-            return HttpResponseRedirect(reverse('learning_logs:topic',
+                new_entry = form.save(commit=False)
+                new_entry.topic = topic
+                new_entry.save()
+                return HttpResponseRedirect(reverse('learning_logs:topic',
                                                 args=[topic_id]))
-    context = {'topic': topic, 'form' : form }
+    context = {'topic': topic, 'form': form}
     return render(request, 'learning_logs/new_entry.html', context)
+
+def edit_entry(request,entry_id):
+    """edit exist entry"""
+    entry = Entry.objects.get(id=entry_id)
+    topic = entry.topic
+
+    if request.method != 'POST':
+        #first request use current topic
+        form = EntryForm(instance=entry)
+    else:
+        # manupilate the data from Post
+        form = EntryForm(instance=entry, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('learning_logs:topic',args=[topic.id]))
+
+    context ={'entry': entry, 'topic': topic, 'form': form}
+    return render(request, 'learning_logs/edit_entry.html',context)
