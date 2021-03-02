@@ -1,17 +1,12 @@
-from django.conf.urls import url
-from django.contrib.auth.views import LoginView
-
-from . import views
+#config/ruls.py
+from django.contrib import admin
+from django.urls import path,include
+from django.views.generic.base import TemplateView #new
 
 urlpatterns = [
-    # login page
-    url(r'^login/$',LoginView.as_view(template_name='user/login.html'),
-        name='login'),
-    #path('login/', LoginView.as_view(template_name='users/login.html'), name="login"),
-
-
-    #for logout 
-     url(r'^logout/$',views.logout_view, name='logout'),
-]
-
-app_name ='user'
+    path('admin/',admin.site.urls),
+    path('accounts/',include('django.contrib.auth.urls')),
+    path('',TemplateView.as_view(template_name='home.html'),name='home'),
+    ]
+         
+         
